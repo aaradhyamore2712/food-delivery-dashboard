@@ -14,7 +14,7 @@ except Exception:
     backend_load_data = None
     backend_filter_data = None
 
-# --- PAGE CONFIG + DARK MODE ---
+
 st.set_page_config(page_title="Food Delivery Dashboard", page_icon="🍔", layout="wide")
 
 dark_css = """
@@ -145,14 +145,6 @@ else:
 # apply filter (use backend.filter_data if available)
 filtered_df = try_filter(df, delivery_area=selected_areas, date_range=selected_dates)
 
-# Download button
-st.sidebar.download_button(
-    "⬇ Download Filtered CSV",
-    filtered_df.to_csv(index=False),
-    "filtered_data.csv",
-    "text/csv"
-)
-
 # --- PAGE HEADER & KPIs ---
 st.title("🍔 Food Delivery Insights Dashboard")
 st.markdown("Gain data-driven insights into restaurant performance, delivery operations, and customer satisfaction.")
@@ -176,7 +168,6 @@ col4.metric("Avg Delivery Time ⏱️", safe_mean(col_delivery_time))
 
 st.divider()
 
-# ---------------- CORE CHARTS ----------------
 
 # Orders by Restaurant (bar)
 if col_restaurant:
@@ -204,7 +195,6 @@ if col_delivery_area and col_order_amount:
 
 st.divider()
 
-# ---------------- ADVANCED CHARTS ----------------
 
 # Delivery Time vs Distance (scatter + trend)
 if col_distance and col_delivery_time:
@@ -241,7 +231,6 @@ if col_orderdate and col_delivery_time:
 
 st.divider()
 
-# ---------------- UNIQUE INSIGHTS ----------------
 
 # Traffic vs Weather impact boxplot (if these columns exist)
 col_traffic = detect_col(filtered_df, ['Traffic_Level','traffic_level','Traffic'])
@@ -322,7 +311,7 @@ if col_delivery_area and col_delivery_time:
 
 st.divider()
 
-# ---------------- CORRELATION & MATRIX PLOTS ----------------
+
 
 # Build numeric dataframe for correlations
 numeric_df = filtered_df.select_dtypes(include=[np.number])
@@ -364,3 +353,4 @@ if col_restaurant and col_delivery_area:
         st.info("Heatmap (restaurant vs area) couldn't be generated — missing order identifier column.")
 
 st.success("✅ Dashboard loaded successfully ")
+
